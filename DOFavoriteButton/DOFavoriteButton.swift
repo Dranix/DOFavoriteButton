@@ -1,65 +1,54 @@
-//
-//  DOFavoriteButton.swift
-//  DOFavoriteButton
-//
-//  Created by Daiki Okumura on 2015/07/09.
-//  Copyright (c) 2015 Daiki Okumura. All rights reserved.
-//
-//  This software is released under the MIT License.
-//  http://opensource.org/licenses/mit-license.php
-//
-
 import UIKit
 
 @IBDesignable
-open class DOFavoriteButton: UIButton {
-
-    fileprivate var imageShape: CAShapeLayer!
-    @IBInspectable open var image: UIImage! {
+public class DOFavoriteButton: UIButton {
+    
+    private var imageShape: CAShapeLayer!
+    @IBInspectable public var image: UIImage! {
         didSet {
             createLayers(image: image)
         }
     }
-    @IBInspectable open var imageColorOn: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
+    @IBInspectable public var imageColorOn: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
         didSet {
             if (isSelected) {
                 imageShape.fillColor = imageColorOn.cgColor
             }
         }
     }
-    @IBInspectable open var imageColorOff: UIColor! = UIColor(red: 136/255, green: 153/255, blue: 166/255, alpha: 1.0) {
+    @IBInspectable public var imageColorOff: UIColor! = UIColor(red: 136/255, green: 153/255, blue: 166/255, alpha: 1.0) {
         didSet {
             if (!isSelected) {
                 imageShape.fillColor = imageColorOff.cgColor
             }
         }
     }
-
-    fileprivate var circleShape: CAShapeLayer!
-    fileprivate var circleMask: CAShapeLayer!
-    @IBInspectable open var circleColor: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
+    
+    private var circleShape: CAShapeLayer!
+    private var circleMask: CAShapeLayer!
+    @IBInspectable public var circleColor: UIColor! = UIColor(red: 255/255, green: 172/255, blue: 51/255, alpha: 1.0) {
         didSet {
             circleShape.fillColor = circleColor.cgColor
         }
     }
-
-    fileprivate var lines: [CAShapeLayer]!
-    @IBInspectable open var lineColor: UIColor! = UIColor(red: 250/255, green: 120/255, blue: 68/255, alpha: 1.0) {
+    
+    private var lines: [CAShapeLayer]!
+    @IBInspectable public var lineColor: UIColor! = UIColor(red: 250/255, green: 120/255, blue: 68/255, alpha: 1.0) {
         didSet {
             for line in lines {
                 line.strokeColor = lineColor.cgColor
             }
         }
     }
-
-    fileprivate let circleTransform = CAKeyframeAnimation(keyPath: "transform")
-    fileprivate let circleMaskTransform = CAKeyframeAnimation(keyPath: "transform")
-    fileprivate let lineStrokeStart = CAKeyframeAnimation(keyPath: "strokeStart")
-    fileprivate let lineStrokeEnd = CAKeyframeAnimation(keyPath: "strokeEnd")
-    fileprivate let lineOpacity = CAKeyframeAnimation(keyPath: "opacity")
-    fileprivate let imageTransform = CAKeyframeAnimation(keyPath: "transform")
-
-    @IBInspectable open var duration: Double = 1.0 {
+    
+    private let circleTransform = CAKeyframeAnimation(keyPath: "transform")
+    private let circleMaskTransform = CAKeyframeAnimation(keyPath: "transform")
+    private let lineStrokeStart = CAKeyframeAnimation(keyPath: "strokeStart")
+    private let lineStrokeEnd = CAKeyframeAnimation(keyPath: "strokeEnd")
+    private let lineOpacity = CAKeyframeAnimation(keyPath: "opacity")
+    private let imageTransform = CAKeyframeAnimation(keyPath: "transform")
+    
+    @IBInspectable public var duration: Double = 1.0 {
         didSet {
             circleTransform.duration = 0.333 * duration // 0.0333 * 10
             circleMaskTransform.duration = 0.333 * duration // 0.0333 * 10
@@ -69,8 +58,8 @@ open class DOFavoriteButton: UIButton {
             imageTransform.duration = 1.0 * duration //0.0333 * 30
         }
     }
-
-    override open var isSelected : Bool {
+    
+    override public var isSelected : Bool {
         didSet {
             if (isSelected != oldValue) {
                 if isSelected {
@@ -81,35 +70,35 @@ open class DOFavoriteButton: UIButton {
             }
         }
     }
-
+    
     public convenience init() {
         self.init(frame: CGRect.zero)
     }
-
+    
     public override convenience init(frame: CGRect) {
         self.init(frame: frame, image: UIImage())
     }
-
+    
     public init(frame: CGRect, image: UIImage!) {
         super.init(frame: frame)
         self.image = image
         createLayers(image: image)
         addTargets()
     }
-
-    public required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)!
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
         createLayers(image: UIImage())
         addTargets()
     }
-
-    fileprivate func createLayers(image: UIImage!) {
+    
+    private func createLayers(image: UIImage!) {
         self.layer.sublayers = nil
-
+        
         let imageFrame = CGRect(x: frame.size.width / 2 - frame.size.width / 4, y: frame.size.height / 2 - frame.size.height / 4, width: frame.size.width / 2, height: frame.size.height / 2)
         let imgCenterPoint = CGPoint(x: imageFrame.midX, y: imageFrame.midY)
-        let lineFrame = CGRect(x: imageFrame.origin.x - imageFrame.width / 4, y: imageFrame.origin.y - imageFrame.height / 4 , width: imageFrame.width * 1.5, height: imageFrame.height * 1.5)
-
+        let lineFrame = CGRect(x: imageFrame.origin.x - imageFrame.width / 4, y: imageFrame.origin.y - imageFrame.height / 4, width: imageFrame.width * 1.5, height: imageFrame.height * 1.5)
+        
         //===============
         // circle layer
         //===============
@@ -120,17 +109,17 @@ open class DOFavoriteButton: UIButton {
         circleShape.fillColor = circleColor.cgColor
         circleShape.transform = CATransform3DMakeScale(0.0, 0.0, 1.0)
         self.layer.addSublayer(circleShape)
-
+        
         circleMask = CAShapeLayer()
         circleMask.bounds = imageFrame
         circleMask.position = imgCenterPoint
-        circleMask.fillRule = kCAFillRuleEvenOdd
+        circleMask.fillRule = CAShapeLayerFillRule.evenOdd
         circleShape.mask = circleMask
-
+        
         let maskPath = UIBezierPath(rect: imageFrame)
-        maskPath.addArc(withCenter: imgCenterPoint, radius: 0.1, startAngle: CGFloat(0.0), endAngle: CGFloat(M_PI * 2), clockwise: true)
+        maskPath.addArc(withCenter: imgCenterPoint, radius: 0.1, startAngle: CGFloat(0.0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
         circleMask.path = maskPath.cgPath
-
+        
         //===============
         // line layer
         //===============
@@ -149,17 +138,17 @@ open class DOFavoriteButton: UIButton {
                 path.move(to: CGPoint(x: lineFrame.midX, y: lineFrame.midY))
                 path.addLine(to: CGPoint(x: lineFrame.origin.x + lineFrame.width / 2, y: lineFrame.origin.y))
                 return path
-                }()
-            line.lineCap = kCALineCapRound
-            line.lineJoin = kCALineJoinRound
+            }()
+            line.lineCap = CAShapeLayerLineCap.round
+            line.lineJoin = CAShapeLayerLineJoin.round
             line.strokeStart = 0.0
             line.strokeEnd = 0.0
             line.opacity = 0.0
-            line.transform = CATransform3DMakeRotation(CGFloat(M_PI) / 5 * (CGFloat(i) * 2 + 1), 0.0, 0.0, 1.0)
+            line.transform = CATransform3DMakeRotation(CGFloat(Double.pi) / 5 * (CGFloat(i) * 2 + 1), 0.0, 0.0, 1.0)
             self.layer.addSublayer(line)
             lines.append(line)
         }
-
+        
         //===============
         // image layer
         //===============
@@ -170,12 +159,12 @@ open class DOFavoriteButton: UIButton {
         imageShape.fillColor = imageColorOff.cgColor
         imageShape.actions = ["fillColor": NSNull()]
         self.layer.addSublayer(imageShape)
-
+        
         imageShape.mask = CALayer()
-        imageShape.mask!.contents = image.cgImage
-        imageShape.mask!.bounds = imageFrame
-        imageShape.mask!.position = imgCenterPoint
-
+        imageShape.mask?.contents = image.cgImage
+        imageShape.mask?.bounds = imageFrame
+        imageShape.mask?.position = imgCenterPoint
+        
         //==============================
         // circle transform animation
         //==============================
@@ -200,7 +189,7 @@ open class DOFavoriteButton: UIButton {
             0.6,    //  6/10
             1.0     // 10/10
         ]
-
+        
         circleMaskTransform.duration = 0.333 // 0.0333 * 10
         circleMaskTransform.values = [
             NSValue(caTransform3D: CATransform3DIdentity),                                                              //  0/10
@@ -224,7 +213,7 @@ open class DOFavoriteButton: UIButton {
             0.9,    //  9/10
             1.0     // 10/10
         ]
-
+        
         //==============================
         // line stroke animation
         //==============================
@@ -255,7 +244,7 @@ open class DOFavoriteButton: UIButton {
             0.944,  // 17/18
             1.0,    // 18/18
         ]
-
+        
         lineStrokeEnd.duration = 0.6 //0.0333 * 18
         lineStrokeEnd.values = [
             0.0,    //  0/18
@@ -277,7 +266,7 @@ open class DOFavoriteButton: UIButton {
             0.944,  // 17/18
             1.0,    // 18/18
         ]
-
+        
         lineOpacity.duration = 1.0 //0.0333 * 30
         lineOpacity.values = [
             1.0,    //  0/30
@@ -289,7 +278,7 @@ open class DOFavoriteButton: UIButton {
             0.4,    // 12/30
             0.567   // 17/30
         ]
-
+        
         //==============================
         // image transform animation
         //==============================
@@ -333,57 +322,57 @@ open class DOFavoriteButton: UIButton {
             1.0     // 30/30
         ]
     }
-
-    fileprivate func addTargets() {
+    
+    private func addTargets() {
         //===============
         // add target
         //===============
-        self.addTarget(self, action: #selector(DOFavoriteButton.touchDown(_:)), for: UIControlEvents.touchDown)
-        self.addTarget(self, action: #selector(DOFavoriteButton.touchUpInside(_:)), for: UIControlEvents.touchUpInside)
-        self.addTarget(self, action: #selector(DOFavoriteButton.touchDragExit(_:)), for: UIControlEvents.touchDragExit)
-        self.addTarget(self, action: #selector(DOFavoriteButton.touchDragEnter(_:)), for: UIControlEvents.touchDragEnter)
-        self.addTarget(self, action: #selector(DOFavoriteButton.touchCancel(_:)), for: UIControlEvents.touchCancel)
+        self.addTarget(self, action: #selector(touchDown), for: UIControl.Event.touchDown)
+        self.addTarget(self, action: #selector(touchUpInside), for: UIControl.Event.touchUpInside)
+        self.addTarget(self, action: #selector(touchDragExit), for: UIControl.Event.touchDragExit)
+        self.addTarget(self, action: #selector(touchDragEnter), for: UIControl.Event.touchDragEnter)
+        self.addTarget(self, action: #selector(touchCancel), for: UIControl.Event.touchCancel)
     }
-
-    func touchDown(_ sender: DOFavoriteButton) {
+    
+    @objc func touchDown(sender: DOFavoriteButton) {
         self.layer.opacity = 0.4
     }
-    func touchUpInside(_ sender: DOFavoriteButton) {
+    @objc func touchUpInside(sender: DOFavoriteButton) {
         self.layer.opacity = 1.0
     }
-    func touchDragExit(_ sender: DOFavoriteButton) {
+    @objc func touchDragExit(sender: DOFavoriteButton) {
         self.layer.opacity = 1.0
     }
-    func touchDragEnter(_ sender: DOFavoriteButton) {
+    @objc func touchDragEnter(sender: DOFavoriteButton) {
         self.layer.opacity = 0.4
     }
-    func touchCancel(_ sender: DOFavoriteButton) {
+    @objc func touchCancel(sender: DOFavoriteButton) {
         self.layer.opacity = 1.0
     }
-
-    open func select() {
+    
+    public func select() {
         isSelected = true
         imageShape.fillColor = imageColorOn.cgColor
-
+        
         CATransaction.begin()
-
+        
         circleShape.add(circleTransform, forKey: "transform")
         circleMask.add(circleMaskTransform, forKey: "transform")
         imageShape.add(imageTransform, forKey: "transform")
-
+        
         for i in 0 ..< 5 {
             lines[i].add(lineStrokeStart, forKey: "strokeStart")
             lines[i].add(lineStrokeEnd, forKey: "strokeEnd")
             lines[i].add(lineOpacity, forKey: "opacity")
         }
-
+        
         CATransaction.commit()
     }
-
-    open func deselect() {
+    
+    public func deselect() {
         isSelected = false
         imageShape.fillColor = imageColorOff.cgColor
-
+        
         // remove all animations
         circleShape.removeAllAnimations()
         circleMask.removeAllAnimations()
